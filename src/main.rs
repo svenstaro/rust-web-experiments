@@ -2,17 +2,38 @@
 extern crate handlebars;
 extern crate ws;
 
-use ws::{ connect, listen, CloseCode, Sender, Handler, Message, Result, Handshake };
+use ws::{ listen, CloseCode, Sender, Handler, Message, Result, Handshake };
 use nickel::{Nickel, HttpRouter};
 use handlebars::Handlebars;
 
 use std::collections::HashMap;
 use std::thread;
 use std::io::prelude::*;
-use std::io;
 use std::fs::File;
 use std::path::Path;
 use std::error::Error;
+
+struct WebsocketServer {
+    out: Sender
+}
+
+impl Handler for WebsocketServer {
+    fn on_message(&mut self, msg: Message) -> Result<()> {
+        println!("herp: {}", msg);
+        self.out.send(msg)
+    }
+
+    fn on_open(&mut self, handshake: Handshake) -> Result<()> {
+        println!("connection: {:?}", handshake);
+        self.out.send("sup")
+    }
+
+    fn on_close(&mut self, code: CloseCode, reason: &str) {
+        println!("Closing: ({:?}) {}", code, reason);
+        println!("Shutting down");
+        self.out.shutdown().unwrap()
+    }
+}
 
 fn load_template(name: &str) -> String {
     let path = Path::new(name);
@@ -32,28 +53,6 @@ fn main() {
 
     let mut server = Nickel::new();
 
-    struct WebsocketServer {
-        out: Sender
-    }
-
-    impl Handler for WebsocketServer {
-        fn on_message(&mut self, msg: Message) -> Result<()> {
-            println!("herp: {}", msg);
-            self.out.send(msg)
-        }
-
-        fn on_open(&mut self, handshake: Handshake) -> Result<()> {
-            println!("connection: {:?}", handshake);
-            self.out.send("sup")
-        }
-
-        fn on_close(&mut self, code: CloseCode, reason: &str) {
-            println!("Closing: ({:?}) {}", code, reason);
-            println!("Shutting down");
-            self.out.shutdown().unwrap()
-        }
-    }
-
     let websocket_server = thread::spawn(move || {
         listen("127.0.0.1:3012", |out| {
             WebsocketServer { out: out }
@@ -69,5 +68,5 @@ fn main() {
 
     server.listen("127.0.0.1:6767");
 
-    websocket_server.join();
+    let _ = websocket_server.join();
 }
