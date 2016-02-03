@@ -6,4 +6,4 @@ authors = ["Sven-Hendrik Haase <sh@lutzhaase.com>"]
 [dependencies]
 ws = "0.4.*"
 nickel = "0.7.*"
-nickel_mustache = "0.1.*"
+handlebars = "0.13.*"
