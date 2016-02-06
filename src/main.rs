@@ -35,21 +35,10 @@ impl Handler for WebsocketServer {
     }
 }
 
-fn load_template(name: &str) -> String {
-    let path = Path::new(name);
-    let mut file = File::open(path).unwrap();
-    let mut s = String::new();
-    match file.read_to_string(&mut s) {
-        Err(why) => panic!("Couldn't load template '{}': {}", name, Error::description(&why)),
-        Ok(_) => s
-    }
-}
-
 fn main() {
     let mut handlebars = Handlebars::new();
 
-    let t = load_template("templates/index.hbs");
-    handlebars.register_template_string("index", t).ok().unwrap();
+    handlebars.register_template_string("index", &Path::new("templates/index.hbs")).ok().unwrap();
 
     let mut server = Nickel::new();
 

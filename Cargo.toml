@@ -6,4 +6,6 @@ authors = ["Sven-Hendrik Haase <sh@lutzhaase.com>"]
 [dependencies]
 ws = "0.4.*"
 nickel = "0.7.*"
-handlebars = "0.13.*"
+#handlebars = "0.13.*"
+handlebars = { git = "git://github.com/sunng87/handlebars-rust.git" }
+diesel = "0.5.*"
