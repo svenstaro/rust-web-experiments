@@ -38,7 +38,7 @@ impl Handler for WebsocketServer {
 fn main() {
     let mut handlebars = Handlebars::new();
 
-    handlebars.register_template_string("index", &Path::new("templates/index.hbs")).ok().unwrap();
+    handlebars.register_template_file("index", &Path::new("templates/index.hbs")).ok().unwrap();
 
     let mut server = Nickel::new();
 
