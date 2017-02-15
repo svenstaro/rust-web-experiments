@@ -7,5 +7,6 @@ build:
 
 .PHONY: run
 run: build
+	mkdir -p data
 	cp target/asmjs-unknown-emscripten/debug/rust-web-experiments.* data/
 	cd data && python -m http.server
