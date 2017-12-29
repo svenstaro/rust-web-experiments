@@ -4,4 +4,5 @@ version = "0.1.0"
 authors = ["Sven-Hendrik Haase <svenstaro@gmail.com>"]
 
 [dependencies]
-webplatform = "0.4"
+chrono = "*"
+yew = { git = "git://github.com/DenisKolodin/yew.git" }

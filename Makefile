@@ -2,11 +2,8 @@ default: build
 
 .PHONY: build
 build:
-	cargo build --target=asmjs-unknown-emscripten
-	cargo build --target=wasm32-unknown-emscripten
+	cargo web build --use-system-emscripten --target-webasm-emscripten
 
 .PHONY: run
 run: build
-	mkdir -p data
-	cp target/asmjs-unknown-emscripten/debug/rust-web-experiments.* data/
-	cd data && python -m http.server
+	cargo web start --use-system-emscripten --target-webasm-emscripten
